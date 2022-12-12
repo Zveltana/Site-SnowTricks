@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -14,6 +14,33 @@
         {% endblock %}
     </head>
     <body>
+        <header class="bg-white width-padding py-7 fixed w-full z-10">
+            <nav class="flex place-content-between items-center">
+                <img src="{{ asset('img/logo.svg') }}" alt="logo snowtricks" class="w-12">
+
+                <ul class="flex flex-row">
+                    <li class="border-r-2 border-red-600 px-2">
+                        Accueil
+                    </li>
+
+                    <li class="border-r-2 border-red-600 px-2">
+                        <a href="">Figures</a>
+                        <div></div>
+                    </li>
+
+                    <li class="border-r-2 border-red-600 px-2">
+                        <a href="">Se connecter</a>
+                        <div></div>
+                    </li>
+
+                    <li class="px-2">
+                        <a href="">S'inscrire</a>
+                        <div></div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
         {% block body %}{% endblock %}
     </body>
 </html>
