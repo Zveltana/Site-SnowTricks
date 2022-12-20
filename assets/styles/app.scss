@@ -23,11 +23,11 @@
 }
 
 .background-title {
-    @apply font-dr_sugiyama text-9xl;
+    @apply font-dr_sugiyama text-9xl text-red-600 translate-y-12;
 }
 
 .title {
-    @apply font-oswald text-6xl;
+    @apply font-oswald text-6xl font-black;
 }
 
 nav {
@@ -46,4 +46,13 @@ nav {
     li:hover>div {
         width: 100%;
     }
+}
+
+.button {
+    @apply mt-10 h-14 w-32 text-white bg-black md:w-36 hover:border-0 hover:bg-red-600;
+    transition: 0.5s;
+}
+
+label {
+    @apply mr-4;
 }

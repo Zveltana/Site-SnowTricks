@@ -1,0 +1,56 @@
+<header class="bg-white width-padding py-7 fixed w-full z-10">
+    <nav class="flex place-content-between items-center">
+        <a href="{{ path('app_homepage') }}"><img src="{{ asset('img/logo.svg') }}" alt="logo snowtricks" class="w-12"></a>
+
+        <ul class="flex flex-row items-center">
+            <li class="border-r-2 border-red-600 px-2">
+                {% if app.current_route != 'app_homepage' %}
+                    <a href="{{ path('app_homepage') }}">
+                        Accueil
+                    </a>
+                    <div></div>
+                {% else %}
+                Accueil
+                {% endif %}
+            </li>
+
+            <li class="border-r-2 border-red-600 px-2">
+                <a href="">Figures</a>
+                <div></div>
+            </li>
+
+            {% if not is_granted('ROLE_USER') %}
+                <li class="border-r-2 border-red-600 px-2">
+                    {% if app.current_route != 'app_login' %}
+                        <a href="{{ path('app_login') }}">
+                            Se connecter
+                        </a>
+                        <div></div>
+                    {% else %}
+                        Se connecter
+                    {% endif %}
+                </li>
+
+                <li class="px-2">
+                    {% if app.current_route != 'app_register' %}
+                        <a href="{{ path('app_register') }}">
+                            S'inscrire
+                        </a>
+                        <div></div>
+                    {% else %}
+                        S'inscrire
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="px-2">
+                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                    <div></div>
+                </li>
+
+                <li class="px-2">
+                    <img class="w-10 rounded-full" src="{{ asset( "uploads/user/"~ app.user.picture) }}" alt="">
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

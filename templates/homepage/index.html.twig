@@ -3,12 +3,22 @@
 {% block title %}SnowTricks{% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
+    <section class="example-wrapper">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
         <figure class="relative">
             <img src="{{ asset('img/image-accueil.jpg') }}" alt="" class="relative">
-            <figcaption class="absolute top-2/4 left-2/4 text-red-600 background-title">SnowTricks</figcaption>
-            <figcaption class="absolute top-2/4 left-2/4 font-black title">SnowTricks</figcaption>
-            <img src="{{ asset('img/fleche-vers-le-bas.png') }}" alt="" class="absolute bottom-10 right-10 w-10">
+            <figcaption class="absolute top-2/4 left-2/4 background-title">SnowTricks</figcaption>
+            <figcaption class="absolute top-2/3 left-2/4 title">SnowTricks</figcaption>
+            <a href="#tricks"><img src="{{ asset('img/fleche-vers-le-bas.png') }}" alt="" class="absolute bottom-10 right-10 w-10"></a>
         </figure>
-    </div>
+    </section>
+
+    <section id="tricks" class="flex">
+
+    </section>
 {% endblock %}
