@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dr+Sugiyama&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.container-big {
+    @apply 2xl:container 2xl:mx-auto;
+}
+
+.width {
+    @apply mx-8 md:mx-16 xl:mx-64;
+}
+
+.width-padding {
+    @apply px-8 md:px-16 xl:px-64;
+}
+
+.height {
+    @apply py-12 md:py-16 xl:py-24;
+}
+
+.background-title {
+    @apply font-dr_sugiyama text-9xl;
+}
+
+.title {
+    @apply font-oswald text-6xl;
+}
+
+nav {
+    a {
+        text-decoration: none;
+        display: block;
+    }
+
+    div {
+        height: 2px;
+        @apply bg-red-600;
+        width: 0;
+        transition: 0.7s;
+    }
+
+    li:hover>div {
+        width: 100%;
+    }
+}
