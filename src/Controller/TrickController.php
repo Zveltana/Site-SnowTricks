@@ -9,6 +9,10 @@ use App\Form\TrickType;
 use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Monolog\DateTimeImmutable;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,13 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager= $entityManager;
-    }
-
     #[Route('/', name: 'app_homepage')]
     public function index(TrickRepository $trickRepository): Response
     {
@@ -34,7 +31,8 @@ class TrickController extends AbstractController
         $tricks = $trickRepository->getPaginatedTricks($page, $limit);
 
         return $this->render('trick/index.html.twig', [
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'pages' => ceil($trickRepository->count([]) / $limit)
         ]);
     }
 
@@ -145,9 +143,18 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_trick_show', ['id' => $trick->getId()], Response::HTTP_SEE_OTHER);
         }
 
+        $trickId = $trick->getId();
+
+        $limit = 5;
+        $page = 1;
+        $messages = $messageRepository->getPaginatedMessages($page, $limit, $trickId);
+        $pages = ceil($messageRepository->countByTrickId($trickId) / $limit);
+
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form' => $form,
+            'messages' => $messages,
+            'pages' => $pages
         ]);
     }
 
