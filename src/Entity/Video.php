@@ -19,6 +19,10 @@ class Video
     #[ORM\Column(length: 255)]
     private ?string $alt = null;
 
+    #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'video')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Trick $trick;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,17 @@ class Video
     public function setAlt(string $alt): self
     {
         $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick($trick): self{
+        $this->trick = $trick;
 
         return $this;
     }

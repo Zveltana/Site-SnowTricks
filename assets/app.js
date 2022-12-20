@@ -10,3 +10,17 @@ import './styles/app.scss';
 
 // start the Stimulus application
 import './bootstrap';
+
+let page = 1;
+const loadMoreTricksBtn = document.querySelector('#loadMoreTricksBtn');
+const trickContainer = document.querySelector('#trick-container');
+
+loadMoreTricksBtn.addEventListener('click', () => {
+    page++;
+    fetch(`/load-more-tricks/${page}`)
+        .then(response => response.json())
+        .then(data => {
+            trickContainer.insertAdjacentHTML('beforeend', data.html);
+        })
+        .catch(error => console.log(error));
+});

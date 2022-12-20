@@ -56,3 +56,18 @@ nav {
 label {
     @apply mr-4;
 }
+
+.grayscale {
+    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+    filter: grayscale(100%);
+    -webkit-transition:all 0.3s;
+    transition:all 0.3s;
+}
+
+.grayscale:hover {
+    -webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
+    filter: grayscale(0%);
+    -webkit-transition:all 0.3s;
+    transition:all 0.3s;
+    @apply py-0 px-0;
+}
