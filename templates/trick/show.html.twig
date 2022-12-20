@@ -14,7 +14,7 @@
         </div>
 
         <figure class="relative">
-            <img src="{{ "uploads/tricks/"~trick.cover }}" alt="" class="w-full h-128 object-cover">
+            <img src="{{ "uploads/tricks/cover/"~trick.cover }}" alt="" class="w-full h-128 object-cover">
             <figcaption class="absolute text-center inset-x-0 top-2/4 background-title">{{ trick.name }}</figcaption>
             <figcaption class="absolute text-center inset-x-0 top-2/4 title">{{ trick.name }}</figcaption>
             {% if is_granted('ROLE_USER') %}
