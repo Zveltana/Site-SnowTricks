@@ -13,33 +13,9 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
+
     <body>
-        <header class="bg-white width-padding py-7 fixed w-full z-10">
-            <nav class="flex place-content-between items-center">
-                <img src="{{ asset('img/logo.svg') }}" alt="logo snowtricks" class="w-12">
-
-                <ul class="flex flex-row">
-                    <li class="border-r-2 border-red-600 px-2">
-                        Accueil
-                    </li>
-
-                    <li class="border-r-2 border-red-600 px-2">
-                        <a href="">Figures</a>
-                        <div></div>
-                    </li>
-
-                    <li class="border-r-2 border-red-600 px-2">
-                        <a href="">Se connecter</a>
-                        <div></div>
-                    </li>
-
-                    <li class="px-2">
-                        <a href="">S'inscrire</a>
-                        <div></div>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+       {{ include ('header.html.twig') }}
 
         {% block body %}{% endblock %}
     </body>
