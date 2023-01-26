@@ -17,12 +17,6 @@
     <body class="bg-gray-300">
        {{ include ('header.html.twig') }}
 
-       {% if app.user and app.user.isVerified == false %}
-           <div class="absolute bg-black text-white text-sm p-3 z-10 flex w-full">
-               <p class="font-bold">Votre compte n'est pas vérifié. <span class="font-light">Renvoyer le lien d'activation</span></p>
-           </div>
-       {% endif %}
-
         {% block body %}{% endblock %}
 
         {{ include ('footer.html.twig') }}
