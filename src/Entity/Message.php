@@ -22,10 +22,11 @@ class Message
     private ?string $content = null;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, cascade: ["persist"], inversedBy: 'message')]
-    #[ORM\JoinColumn(name:"trick_id", referencedColumnName:"id")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Trick $trick;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'message')]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?User $user;
 
     public function getId(): ?int

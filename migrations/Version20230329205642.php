@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  *
  * @return void
  */
-final class Version20230319154236 extends AbstractMigration
+final class Version20230329205642 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,12 +22,12 @@ final class Version20230319154236 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE trick CHANGE creation_date creation_date DATETIME NOT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_D8F0A91E989D9B62 ON trick (slug)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE trick CHANGE creation_date creation_date DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('DROP INDEX UNIQ_D8F0A91E989D9B62 ON trick');
     }
 }

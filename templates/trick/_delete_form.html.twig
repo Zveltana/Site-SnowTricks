@@ -1,6 +1,6 @@
 <section class="flex justify-center">
-    <form method="post" action="{{ path('app_trick_delete', {'id': trick.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer cette figure ?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+    <form method="post" action="{{ path('app_trick_delete', {'slug': trick.slug}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer cette figure ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.slug) }}">
         <button><img src="{{ asset('img/icon/corbeille.png') }}" alt="corbeille pour supprimer la figure" class="w-6 object-contain"></button>
     </form>
 </section>

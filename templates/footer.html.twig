@@ -1,5 +1,55 @@
-<footer class="bg-black py-10">
-    <ol class="text-white width">
-        <li>Copyright @ 2023</li>
+<footer class="bg-black py-5 fixed bottom-0 w-full lg:static lg:py-10">
+    <ol class="text-white width flex justify-between lg:hidden">
+        <li>
+            {% if app.current_route != 'app_homepage' %}
+            <a href="/">
+                <img src="{{ asset('img/accueil.png') }}" alt="icon accueil" class="w-8">
+            </a>
+            {% else %}
+            <a href="/">
+                <img src="{{ asset('img/accueil-red.png') }}" alt="icon accueil" class="w-8">
+            </a>
+            {% endif %}
+        </li>
+
+        {% if not is_granted('ROLE_USER') %}
+            <li>
+                <a href="{{ path('app_login') }}">
+                    {% if app.current_route != 'app_login' %}
+                        <img src="{{ asset('img/login.png') }}" alt="icon de connexion" class="w-8">
+                    {% else %}
+                    <img src="{{ asset('img/login-red.png') }}" alt="icon de connexion rouge" class="w-8">
+                    {% endif %}
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ path('app_register') }}">
+                    {% if app.current_route != 'app_register' %}
+                        <img src="{{ asset('img/add-user.png') }}" alt="icon de création d'un utilisateur" class="w-8">
+                    {% else %}
+                    <img src="{{ asset('img/add-user-red.png') }}" alt="icon de de création d'un utilisateur" class="w-8">
+                    {% endif %}
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path('app_trick_new') }}">
+                    {% if app.current_route != 'app_trick_new' %}
+                        <img src="{{ asset('img/snowboard.png') }}" alt="icon de snowboard" class="w-8">
+                    {% else %}
+                        <img src="{{ asset('img/snowboard-red.png') }}" alt="icon de snowboard rouge" class="w-8">
+                    {% endif %}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_logout') }}">
+                    <img src="{{ asset('img/logout.png') }}" alt="icon de decconnexion" class="w-8">
+                </a>
+            </li>
+        {% endif %}
     </ol>
+    <div class="text-white width hidden lg:block">
+        <p>Copyright @ 2023</p>
+    </div>
 </footer>

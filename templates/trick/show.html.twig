@@ -3,7 +3,7 @@
 {% block title %}Trick{% endblock %}
 
 {% block body %}
-    <section class="width pt-44 pb-5">
+    <section class="width pt-12 pb-5 md:pt-16 xl:pt-44">
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="text-red-600" role="alert">{{ message }}</div>
@@ -19,7 +19,7 @@
             <figcaption class="absolute text-center inset-x-0 top-2/4 title">{{ trick.name }}</figcaption>
             {% if is_granted('ROLE_USER') %}
                 <div class="flex gap-x-2 absolute top-0 right-0 py-3 px-5 bg-black">
-                    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}"><img src="{{ asset('img/icon/crayon.png') }}" alt="crayon pour modifier la figure" class="w-6 object-contain"></a>
+                    <a href="{{ path('app_trick_edit', {'slug': trick.slug}) }}"><img src="{{ asset('img/icon/crayon.png') }}" alt="crayon pour modifier la figure" class="w-6 object-contain"></a>
                     {{ include ('trick/_delete_form.html.twig') }}
                 </div>
             {% endif %}
@@ -28,7 +28,7 @@
 
     <section class="width">
         <div class="flex overflow-x-auto space-x-8">
-            <ul class="flex shrink-0 gap-x-2">
+            <ul class="flex shrink-0 gap-x-2 hidden mb-5 lg:mb-0 lg:flex" id="picture-video">
                 {% for picture in trick.pictures %}
                     <li>
                         <a data-fslightbox="gallery" href="{{ "uploads/tricks/"~picture.picture }}" class="overflow-x-auto">
@@ -45,10 +45,24 @@
                 {% endfor %}
             </ul>
         </div>
+
+        <div class="flex justify-center">
+            <input type="checkbox" class="hidden" id="see-more">
+            <label class="flex justify-center items-center button button-submit lg:hidden" for="see-more">
+                Voir les médias
+            </label>
+        </div>
     </section>
 
     <section class="width height space-y-10">
-        <h2 class="text-red-600">Catégorie : {{ trick.category }}</h2>
+        <div class="flex gap-x-5 justify-center">
+            <p class="text-red-600">Catégorie : <span class="font-semibold">{{ trick.category }}</span></p>
+            <p class="text-red-600">Publié le {{ trick.creationDate|date('d/m/Y') }} à {{ trick.creationDate|date('H:i') }} par <span class="font-semibold">{{ trick.user.name }}</span></p>
+
+            {% if trick.creationDate != trick.updateDate %}
+                <p class="text-red-600">Mis à jour le {{ trick.updateDate|date('d/m/Y') }} à {{ trick.updateDate|date('H:i')}}</p>
+            {% endif %}
+        </div>
         <h1 class="text-center title">Trick {{ trick.name }}</h1>
 
         <p><span class="font-bold underline">Description :</span> {{ trick.description }}</p>
@@ -65,7 +79,7 @@
         </section>
     {% endif %}
 
-    <section class="width border-2 border-gray-600 mb-12 md:mb-16 xl:mb-24">
+    <section class="width border-2 border-gray-600 mb-32 md:mb-32 xl:mb-20">
         <div class="bg-gray-600">
             <h1 class="text-xl font-bold text-white p-10">Espace de discussion</h1>
         </div>

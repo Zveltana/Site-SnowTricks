@@ -5,77 +5,76 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .container-big {
-    @apply 2xl:container 2xl:mx-auto;
+  @apply 2xl:container 2xl:mx-auto;
 }
 
 .width {
-    @apply mx-8 md:mx-16 xl:mx-64;
+  @apply mx-8 md:mx-16 xl:mx-64;
 }
 
 .width-padding {
-    @apply px-8 md:px-16 xl:px-64;
+  @apply px-8 md:px-16 xl:px-64;
 }
 
 .height {
-    @apply py-12 md:py-16 xl:py-24;
+  @apply py-12 md:py-16 xl:py-24;
 }
 
 .background-title {
-    @apply font-dr_sugiyama text-9xl text-red-600 translate-y-12;
+  @apply font-dr_sugiyama text-8xl text-red-600 translate-y-12 lg:text-9xl;
 }
 
 .title {
-    @apply font-oswald text-6xl font-black;
+  @apply font-oswald font-black text-5xl lg:text-6xl;
 }
 
 nav {
-    a {
-        text-decoration: none;
-        display: block;
-    }
+  a {
+    text-decoration: none;
+    display: block;
+  }
 
-    div {
-        height: 2px;
-        @apply bg-red-600;
-        width: 0;
-        transition: 0.7s;
-    }
+  div {
+    height: 2px;
+    @apply bg-red-600;
+    width: 0;
+    transition: 0.7s;
+  }
 
-    li:hover>div {
-        width: 100%;
-    }
+  li:hover > div {
+    width: 100%;
+  }
 }
 
 .button {
-    @apply mt-10 h-14 w-32 text-white md:w-36 hover:border-0 hover:bg-red-600;
-    transition: 0.5s;
+  @apply mt-10 h-14 w-32 text-white md:w-36 hover:border-0 hover:bg-red-600;
+  transition: 0.5s;
 
-    &-submit {
-        @apply bg-black;
-    }
+  &-submit {
+    @apply bg-black;
+  }
 
-    &-delete {
-        @apply bg-red-600 hover:bg-red-700;
-    }
+  &-delete {
+    @apply bg-red-600 hover:bg-red-700;
+  }
 }
 
 label {
-    @apply mr-4;
+  @apply mr-4;
 }
 
 .grayscale {
-    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
-    filter: grayscale(100%);
-    -webkit-transition:all 0.3s;
-    transition:all 0.3s;
+  -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+  filter: grayscale(100%);
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 .grayscale:hover {
-    -webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
-    filter: grayscale(0%);
-    -webkit-transition:all 0.3s;
-    transition:all 0.3s;
-    @apply py-0 px-0;
+  -webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
+  filter: grayscale(0%);
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  @apply py-0 px-0;
 }

@@ -4,10 +4,10 @@
 
 {% block body %}
     <section id="top">
-        <figure class="relative">
-            <img src="{{ asset('img/image-accueil.jpg') }}" alt="" class="relative">
-            <figcaption class="absolute top-2/4 left-2/4 background-title">SnowTricks</figcaption>
-            <figcaption class="absolute top-2/3 left-2/4 title">SnowTricks</figcaption>
+        <figure class="relative h-screen md:h-auto">
+            <img src="{{ asset('img/image-accueil.jpg') }}" alt="" class="relative object-cover h-full">
+            <figcaption class="absolute flex items-center justify-center inset-0 lg:top-2/4 lg:left-2/4 background-title">SnowTricks</figcaption>
+            <figcaption class="absolute flex items-center justify-center inset-0 lg:top-2/3 lg:left-2/4 title">SnowTricks</figcaption>
             <a href="#trickList"><img src="{{ asset('img/fleche-vers-le-bas.png') }}" alt="" class="absolute bottom-10 right-10 w-10"></a>
         </figure>
     </section>
@@ -21,8 +21,8 @@
         </section>
     {% endif %}
 
-    <section id="trickList" class="width height text-center">
-        <div class="flex gap-x-10 gap-y-10 flex-wrap justify-between" id="trick-container">
+    <section id="trickList" class="width text-center pt-12 pb-20 md:pt-16 md:pb-32 xl:py-24">
+        <div class="flex gap-x-5 gap-y-5 flex-wrap justify-between lg:gap-x-10 lg:gap-y-10" id="trick-container">
             {{ include ('trick/_list_tricks.html.twig') }}
         </div>
 
@@ -31,7 +31,7 @@
         </button>
     </section>
 
-    <a href="#" class="back-to-top absolute bottom-44 right-10 hidden">
+    <a href="#" class="back-to-top absolute right-10 hidden bottom-24 lg:bottom-44">
         <img src="{{ asset('img/fleche-vers-le-haut.png') }}" alt="chevron to go to the top of the page" class="w-10" onmousedown="return false">
     </a>
 

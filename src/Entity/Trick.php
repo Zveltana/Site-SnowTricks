@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity("name")]
+#[UniqueEntity("slug")]
 class Trick
 {
     #[ORM\Id]
@@ -22,7 +23,7 @@ class Trick
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(name: 'name', length: 255, unique: true)]
     private string $name = '';
 
     #[ORM\Column(type: "text")]
@@ -33,6 +34,12 @@ class Trick
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creationDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updateDate = null;
+
+    #[ORM\Column(name:'slug', length: 255, unique: true)]
+    private string $slug;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1)]
@@ -45,6 +52,10 @@ class Trick
 
     #[ORM\ManyToOne(targetEntity: Category::class, cascade: ["persist"], inversedBy: 'trick')]
     private ?Category $category;
+
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ["persist"], inversedBy: 'trick')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user;
 
     public ?UploadedFile $coverFile = null;
 
@@ -103,6 +114,30 @@ class Trick
     public function setCreationDate(\DateTimeInterface $creationDate): self
     {
         $this->creationDate = $creationDate;
+
+        return $this;
+    }
+
+    public function getUpdateDate(): \DateTimeInterface
+    {
+        return $this->updateDate;
+    }
+
+    public function setUpdateDate(\DateTimeInterface $updateDate): self
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
@@ -170,6 +205,17 @@ class Trick
 
     public function setCategory(Category $category): self{
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self{
+        $this->user = $user;
 
         return $this;
     }

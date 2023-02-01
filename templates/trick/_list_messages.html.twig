@@ -3,7 +3,7 @@
         <div class="space-y-5 p-10">
             <div class="flex items-center pb-3 border-b-2 border-red-600 justify-between">
                 <div class="flex items-center gap-x-3">
-                    <img src="{{ asset( message.user.picture) }}" alt="image de profil de l'auteur" class="rounded-full w-10">
+                    <img src="{{ asset( "uploads/user/"~message.user.picture) }}" alt="image de profil de l'auteur" class="rounded-full w-10">
                     <p class="text-red-600">{{ message.user.name }}</p>
                 </div>
 
