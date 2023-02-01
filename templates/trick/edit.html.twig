@@ -3,13 +3,13 @@
 {% block title %}Edit Trick{% endblock %}
 
 {% block body %}
-    <section class="width pt-44 pb-5">
+    <section class="width pb-32 md:pt-16 md:pb-32 xl:pt-44 xl:pb-20">
         <div class="pb-32">
             <h2 class="text-center background-title">Modifier une figure</h2>
             <h1 class="text-center title absolute inset-x-0">Modifier une figure</h1>
         </div>
 
-        <div class="border-2 border-red-600 rounded-lg">
+        <div class="border-2 border-red-600 rounded-lg mb-5">
             <div class="width height">
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}

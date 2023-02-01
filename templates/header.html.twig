@@ -1,60 +1,62 @@
-<header class="bg-white width-padding py-7 fixed w-full z-10">
-    <nav class="flex place-content-between items-center">
-        <a href="{{ path('app_homepage') }}"><img src="{{ asset('img/logo.svg') }}" alt="logo snowtricks" class="w-12"></a>
+<header class="bg-white width-padding py-7 fixed w-full z-10 hidden lg:block">
+    <div class="flex place-content-between">
+        <nav class="flex place-content-between items-center w-full">
+            <a href="{{ path('app_homepage') }}"><img src="{{ asset('img/logo.svg') }}" alt="logo snowtricks" class="w-12"></a>
 
-        <ul class="flex flex-row items-center">
-            <li class="border-r-2 border-red-600 px-2">
-                {% if app.current_route != 'app_homepage' %}
-                    <a href="{{ path('app_homepage') }}">
-                        Accueil
-                    </a>
-                    <div></div>
-                {% else %}
-                Accueil
-                {% endif %}
-            </li>
-
-            {% if not is_granted('ROLE_USER') %}
+            <ul class="flex-row items-center flex">
                 <li class="border-r-2 border-red-600 px-2">
-                    {% if app.current_route != 'app_login' %}
-                        <a href="{{ path('app_login') }}">
+                    {% if app.current_route != 'app_homepage' %}
+                        <a href="{{ path('app_homepage') }}">
+                            Accueil
+                        </a>
+                        <div></div>
+                    {% else %}
+                    Accueil
+                    {% endif %}
+                </li>
+
+                {% if not is_granted('ROLE_USER') %}
+                    <li class="border-r-2 border-red-600 px-2">
+                        {% if app.current_route != 'app_login' %}
+                            <a href="{{ path('app_login') }}">
+                                Se connecter
+                            </a>
+                            <div></div>
+                        {% else %}
                             Se connecter
-                        </a>
-                        <div></div>
-                    {% else %}
-                        Se connecter
-                    {% endif %}
-                </li>
+                        {% endif %}
+                    </li>
 
-                <li class="px-2">
-                    {% if app.current_route != 'app_register' %}
-                        <a href="{{ path('app_register') }}">
+                    <li class="px-2">
+                        {% if app.current_route != 'app_register' %}
+                            <a href="{{ path('app_register') }}">
+                                S'inscrire
+                            </a>
+                            <div></div>
+                        {% else %}
                             S'inscrire
-                        </a>
-                        <div></div>
-                    {% else %}
-                        S'inscrire
-                    {% endif %}
-                </li>
-            {% else %}
-                <li class="border-r-2 border-red-600 px-2">
-                    {% if app.current_route != 'app_trick_new' %}
-                        <a href="{{ path('app_trick_new') }}">Ajouter une figure</a>
-                        <div></div>
-                    {% else %}
-                        Ajouter une figure
-                    {% endif %}
-                </li>
+                        {% endif %}
+                    </li>
+                {% else %}
+                    <li class="border-r-2 border-red-600 px-2">
+                        {% if app.current_route != 'app_trick_new' %}
+                            <a href="{{ path('app_trick_new') }}">Ajouter une figure</a>
+                            <div></div>
+                        {% else %}
+                            Ajouter une figure
+                        {% endif %}
+                    </li>
 
-                <li class="px-2">
-                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                    <div></div>
-                </li>
+                    <li class="px-2">
+                        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                        <div></div>
+                    </li>
 
-                <li class="px-2">
-                    <img class="w-10 rounded-full" src="{{ asset( app.user.picture) }}" alt="portrait de {{ app.user.name }}">
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+                    <li class="px-2">
+                        <img class="w-10 rounded-full" src="{{ asset("uploads/user/"~app.user.picture) }}" alt="portrait de {{ app.user.name }}">
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 </header>

@@ -6,13 +6,14 @@
  */
 
 // any CSS you import will output into a single css file (app.scss in this case)
-import './styles/app.scss';
+import "./styles/app.scss";
 
-import './addTrick';
-import './tricks_controller';
-import './messages_controller';
-import './scroll';
+import "./addTrick";
+import "./tricks_controller";
+import "./messages_controller";
+import "./scroll";
+import "./show_picture_mobile";
 
 // start the Stimulus application
-import './bootstrap';
+import "./bootstrap";
 require("fslightbox");

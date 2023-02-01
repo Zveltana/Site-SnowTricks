@@ -8,27 +8,21 @@ use App\Form\MessageType;
 use App\Form\TrickType;
 use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\Trick\EditTrick;
+use App\Services\Trick\NewTrick;
+use App\Services\Trick\RemoveTrick;
+use App\Services\Trick\ShowTrick;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TrickController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager= $entityManager;
-    }
-
     #[Route('/', name: 'app_homepage')]
     public function index(TrickRepository $trickRepository): Response
     {
@@ -59,62 +53,18 @@ class TrickController extends AbstractController
     }
 
     #[Route('/new', name: 'app_trick_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, TrickRepository $trickRepository): Response
+    #[IsGranted('ROLE_USER')]
+    public function new(Request $request, NewTrick $newTrick): Response
     {
         $trick = new Trick();
         $trick->setCreationDate(new \DateTimeImmutable());
+        $trick->setUpdateDate(new \DateTimeImmutable());
+        $trick->setUser($this->getUser());
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
-        $em = $this->entityManager;
-
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $cover */
-            $cover = $trick->coverFile;
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($cover) {
-                $originalFilename = pathinfo($cover->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $newFilename = sprintf("%s.%s", md5(basename($originalFilename)), $cover->guessExtension());
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $cover->move('uploads/tricks/cover', $newFilename);
-
-                    $trick->setCover($newFilename);
-                } catch (FileException $e) {
-                    $e = "L'image n'a pas pu être uploader";
-                }
-            }
-
-            /** @var UploadedFile $pictures */
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            foreach ($trick->getPictures() as $picture) {
-                // this is needed to safely include the file name as part of the URL
-                $newFilename = md5(uniqid('', true)).'.'.$picture->file->guessExtension();
-
-                // Move the filewFilename to the directory where brochures are stored
-                try {
-                    $picture->file->move('uploads/tricks', $newFilename);
-
-                    $picture->setPicture($newFilename);
-                } catch (FileException $e) {
-                    $e = "L'image n'a pas pu être uploader";
-                }
-            }
-
-            $videos = $form->get('videos')->getData();
-
-            foreach($videos as $video)
-            {
-                $video->setTrick($trick);
-                $em->persist($video);
-            }
-
-            $em->persist($trick);
-            $em->flush();
+            $newTrick->new($trick);
 
             $this->addFlash('otherx', 'Votre figure a bien été ajouté');
             return $this->redirectToRoute('app_homepage');
@@ -126,27 +76,23 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_trick_show', methods: ['GET', 'POST'])]
-    public function show(Trick $trick, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    #[Route('/{slug}', name: 'app_trick_show', methods: ['GET', 'POST'])]
+    public function show(Trick $trick, Request $request, MessageRepository $messageRepository, ShowTrick $showTrick): Response
     {
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $message->setTrick($trick);
-            $message->setUser($user);
-            $message->setCreationDate(new \DateTime());
-            $message->setContent($form->get('content')->getData());
+            $showTrick->Show($trick, $message);
 
-            $em = $entityManager;
-            $em->persist($message);
-            $em->flush();
+            $this->addFlash('success', 'Votre commentaire a bien été pris en compte');
 
-            $this->addFlash('success','Votre commentaire a bien été pris en compte');
-
-            return $this->redirectToRoute('app_trick_show', ['id' => $trick->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         $trickId = $trick->getId();
@@ -186,8 +132,9 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Trick $trick, TrickRepository $trickRepository): Response
+    #[Route('/{slug}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function edit(Request $request, EditTrick $editTrick, Trick $trick): Response
     {
         $form = $this->createForm(TrickType::class, $trick, [
             'isNew' => false, // Set to false since the trick already exists
@@ -195,44 +142,8 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $cover = $trick->coverFile;
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($cover) {
-                $originalFilename = pathinfo($cover->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $newFilename = sprintf("%s.%s", md5(basename($originalFilename)), $cover->guessExtension());
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $cover->move('uploads/tricks/cover', $newFilename);
-
-                    $trick->setCover($newFilename);
-                } catch (FileException $e) {
-                    $e = "L'image n'a pas pu être uploader";
-                }
-            }
-
-            foreach ($form->get('pictures')->getData() as $picture) {
-                if ($picture->file !== null) {
-                    $file = $picture->file;
-
-                    $newFilename = md5(uniqid('', true)) . '.' . $file->guessExtension();
-
-                    // Move the filewFilename to the directory where brochures are stored
-                    try {
-                        $picture->file->move('uploads/tricks', $newFilename);
-
-                        $picture->setPicture($newFilename);
-                    } catch (FileException $e) {
-                        $e = "L'image n'a pas pu être uploader";
-                    }
-                }
-            }
-
-            $trick->setCreationDate(new \DateTime());
-
-            $trickRepository->save($trick, true);
+            $editTrick->Edit($trick);
+            $this->addFlash('otherx', 'Votre figure a bien été mise à jour');
 
             return $this->redirectToRoute('app_homepage', [], Response::HTTP_SEE_OTHER);
         }
@@ -243,23 +154,11 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_trick_delete', methods: ['GET', 'POST'])]
-    public function delete(Request $request, Trick $trick, EntityManagerInterface $entityManager, Filesystem $filesystem): Response
+    #[Route('/{slug}/delete', name: 'app_trick_delete', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function delete(Trick $trick, RemoveTrick $removeTrick): Response
     {
-        foreach ($trick->getPictures() as $picture) {
-            $filenamePicture = 'uploads/tricks/'.$picture->getPicture();
-            $filesystem->remove($filenamePicture);
-            $entityManager->remove($picture);
-        }
-
-        foreach ($trick->getVideos() as $video) {
-            $entityManager->remove($video);
-        }
-
-        $filenameCover = 'uploads/tricks/cover/'.$trick->getCover();
-        $filesystem->remove($filenameCover);
-        $entityManager->remove($trick);
-        $entityManager->flush();
+        $removeTrick->Remove($trick);
 
         $this->addflash(
             'success',
