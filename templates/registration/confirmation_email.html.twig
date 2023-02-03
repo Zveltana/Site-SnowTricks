@@ -1,6 +1,6 @@
-<h1>Merci de confirmer votre email !</h1>
+<h1>Hello, merci de confirmer votre email !</h1>
 
-<p> Bienvenue {{ user.name | upper }} sur le site SnowTricks !</p>
+<p> Bienvenue {{ user.name | capitalize }} sur le site SnowTricks !</p>
 <p>
     Pour confirmer votre email, merci de cliquer sur ce lien : <br><br>
     <a href="{{ url('app_verify_email', {"token": token}) }}">Confirmer mon email</a>.
