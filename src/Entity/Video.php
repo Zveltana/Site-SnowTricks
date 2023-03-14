@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
@@ -13,11 +14,10 @@ class Video
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\length(min: 2)]
     #[ORM\Column(length: 255)]
     private ?string $video = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $alt = null;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'video')]
     #[ORM\JoinColumn(nullable: false)]
@@ -36,18 +36,6 @@ class Video
     public function setVideo(string $video): self
     {
         $this->video = $video;
-
-        return $this;
-    }
-
-    public function getAlt(): ?string
-    {
-        return $this->alt;
-    }
-
-    public function setAlt(string $alt): self
-    {
-        $this->alt = $alt;
 
         return $this;
     }

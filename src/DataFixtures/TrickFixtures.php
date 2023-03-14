@@ -64,6 +64,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             $trick->setName($value['name']);
             $trick->setDescription($value['description']);
             $trick->setCategory($value['category']);
+            $trick->setCreationDate(new \DateTimeImmutable());
             $trick->setCover($value['cover']);
 
             $manager->persist($trick);
@@ -78,7 +79,8 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             $trick->setName($faker->words(3, true));
             $trick->setDescription($faker->text(500));
             $trick->setCategory($this->getReference('category_' . $faker->numberBetween(1, 2)));
-            $trick->setCover('trick-' . $i . '.jpg');
+            $trick->setCreationDate(new \DateTimeImmutable());
+            $trick->setCover('trick-' . $faker->numberBetween(1, 11) . '.jpg');
 
             $manager->persist($trick);
 

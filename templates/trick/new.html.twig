@@ -3,10 +3,26 @@
 {% block title %}New Trick{% endblock %}
 
 {% block body %}
-    <section class="width pt-44 pb-44">
-        <h1>Create new Trick</h1>
+    <section class="width pt-44 pb-5">
+        <div class="pb-32">
+            <h2 class="text-center background-title">Créer une figure</h2>
+            <h1 class="text-center title absolute inset-x-0">Créer une figure</h1>
+        </div>
 
-        {{ include('trick/_form.html.twig') }}
+        <div class="border-2 border-red-600 rounded-lg">
+            <div class="width height">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="text-red-600" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+
+                <div class="space-y-5">
+                    <h3 class="font-oswald text-xl font-bold">Créer une nouvelle figure</h3>
+                    {{ include('trick/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
 
         <a href="{{ path('app_homepage') }}">back to list</a>
     </section>

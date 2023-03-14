@@ -8,19 +8,24 @@
 // any CSS you import will output into a single css file (app.scss in this case)
 import './styles/app.scss';
 
+import './addTrick';
+
 // start the Stimulus application
 import './bootstrap';
+require("fslightbox");
 
 let page = 1;
 const loadMoreTricksBtn = document.querySelector('#loadMoreTricksBtn');
 const trickContainer = document.querySelector('#trick-container');
 
-loadMoreTricksBtn.addEventListener('click', () => {
-    page++;
-    fetch(`/load-more-tricks/${page}`)
-        .then(response => response.json())
-        .then(data => {
-            trickContainer.insertAdjacentHTML('beforeend', data.html);
-        })
-        .catch(error => console.log(error));
-});
+if (loadMoreTricksBtn != null) {
+    loadMoreTricksBtn.addEventListener('click', () => {
+        page++;
+        fetch(`/load-more-tricks/${page}`)
+            .then(response => response.json())
+            .then(data => {
+                trickContainer.insertAdjacentHTML('beforeend', data.html);
+            })
+            .catch(error => console.log(error));
+    });
+}

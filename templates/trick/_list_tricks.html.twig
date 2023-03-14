@@ -1,7 +1,7 @@
 {% for trick in tricks %}
     <div class="bg-white shadow-lg w-1/6 flex flex-col" id="tricks">
         <a href="{{ path('app_trick_show', {'id': trick.id}) }}">
-            <img src="{{ "uploads/tricks/"~trick.cover }}" alt="" class="h-52 w-64 object-cover px-5 py-3 grayscale">
+            <img src="{{ "uploads/tricks/cover/"~trick.cover }}" alt="" class="h-52 w-64 object-cover px-5 py-3 grayscale">
         </a>
 
         <div class="flex w-full {% if is_granted('ROLE_USER') %}justify-between {% endif %}justify-center {% if loop.index is odd %}bg-red-600 {% endif %}bg-black px-5 py-3 h-full items-center">
