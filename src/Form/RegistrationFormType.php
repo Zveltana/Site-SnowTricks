@@ -32,8 +32,10 @@ class RegistrationFormType extends AbstractType
                         'mimeTypes' => [
                             'image/png',
                             'image/jpg',
+                            'image/jpeg',
+                            'image/svg',
                         ],
-                        'mimeTypesMessage' => 'Veuillez insérer une image (png, jpg, jpeg)'
+                        'mimeTypesMessage' => 'Veuillez insérer une image (png, jpg, jpeg, svg)'
                     ])
                 ]
             ])

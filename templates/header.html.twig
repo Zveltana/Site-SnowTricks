@@ -48,7 +48,7 @@
                 </li>
 
                 <li class="px-2">
-                    <img class="w-10 rounded-full" src="{{ asset( app.user.picture) }}" alt="">
+                    <img class="w-10 rounded-full" src="{{ "uploads/user/"~asset( app.user.picture) }}" alt="portrait de {{ app.user.name }}">
                 </li>
             {% endif %}
         </ul>
