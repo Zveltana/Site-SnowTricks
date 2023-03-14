@@ -3,28 +3,62 @@
 {% block title %}Trick{% endblock %}
 
 {% block body %}
-    <h1>Trick</h1>
+    <section class="width pt-44 pb-5">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="text-red-600" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+        <div class="mb-3">
+            <a href="{{ path('app_homepage') }}" class="hover:text-red-600">Retourner à la liste des tricks</a>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trick.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ trick.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <figure class="relative">
+            <img src="{{ "uploads/tricks/"~trick.cover }}" alt="" class="w-full h-128 object-cover">
+            <figcaption class="absolute text-center inset-x-0 top-2/4 background-title">{{ trick.name }}</figcaption>
+            <figcaption class="absolute text-center inset-x-0 top-2/4 title">{{ trick.name }}</figcaption>
+            {% if is_granted('ROLE_USER') %}
+                <div class="flex gap-x-2 absolute top-0 right-0 py-3 px-5 bg-black">
+                    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}"><img src="{{ asset('img/icon/crayon.png') }}" alt="crayon pour modifier la figure" class="w-6 object-contain"></a>
+                    <a href="{{ path('app_trick_delete', {'id': trick.id}) }}"><img src="{{ asset('img/icon/corbeille.png') }}" alt="corbeille pour supprimer la figure" class="w-6 object-contain"></a>
+                </div>
+            {% endif %}
+        </figure>
+    </section>
 
-    <a href="{{ path('app_homepage') }}">back to list</a>
+    <section class="width">
+        <ul class="grid grid-cols-8 h-40 overflow-x-auto gap-2">
+            {% for picture in trick.pictures %}
+                <li>
+                    <a data-fslightbox="gallery" href="{{ "uploads/tricks/"~picture.picture }}" class="overflow-x-auto">
+                        <img src="{{ "uploads/tricks/"~picture.picture }}" alt="{{ picture.alt }}" class="w-40 h-40 object-cover max-w-full">
+                    </a>
+                </li>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <li>
+                    <a data-fslightbox="gallery" href="{{ video.video }}" target="myiframe">
+                        <iframe name="myiframe" width="160" height="160" src="{{ video.video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 
-    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}">edit</a>
+    <section class="width height space-y-10">
+        <h1 class="text-center title">Trick {{ trick.name }}</h1>
 
-    {{ include('trick/_delete_form.html.twig') }}
+        <p><span class="font-bold underline">Description :</span> {{ trick.description }}</p>
+    </section>
+
+    {% if is_granted('ROLE_USER') %}
+        <section class="height">
+            <div class="bg-red-600 py-20 space-y-10 flex flex-col justify-center items-center">
+                <div class="border-2 border-black w-2/4"></div>
+                <h1 class="text-xl font-bold">Pour ajouter votre commentaire</h1>
+                {{ include ('trick/_form_message.html.twig') }}
+                <div class="border-2 border-black w-2/4"></div>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
 use App\Entity\Trick;
+use App\Form\MessageType;
 use App\Form\TrickType;
+use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use JsonException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,6 +19,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager= $entityManager;
+    }
+
     #[Route('/', name: 'app_homepage')]
     public function index(TrickRepository $trickRepository): Response
     {
@@ -41,43 +48,72 @@ class TrickController extends AbstractController
             'tricks' => $tricks
         ]);
 
-        return new JsonResponse(['html' => $response]);
+        return new JsonResponse([
+            'html' => $response,
+            'pages' => ceil($trickRepository->count([]) / $limit)
+        ]);
     }
 
     #[Route('/new', name: 'app_trick_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TrickRepository $trickRepository): Response
     {
         $trick = new Trick();
+        $trick->setCreationDate(new \DateTimeImmutable());
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
+        $em = $this->entityManager;
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $trickRepository->save($trick, true);
-
-
-            /** @var UploadedFile $pictures */
-            $pictures = $form->get('pictures')->getData();
+            /** @var UploadedFile $cover */
+            $cover = $trick->coverFile;
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
-            foreach ($pictures as $picture) {
-                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+            if ($cover) {
+                $originalFilename = pathinfo($cover->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
-                $ne = sprintf("%s.%s", md5(basename($originalFilename)), $picture->guessExtension());
+                $newFilename = sprintf("%s.%s", md5(basename($originalFilename)), $cover->guessExtension());
 
-                // Move the filewFilename to the directory where brochures are stored
+                // Move the file to the directory where brochures are stored
                 try {
-                    $pictures->move(
-                        $this->getParameter('images_directory'),
-                        'uploads/user', $newFilename
-                    );
+                    $cover->move('uploads/tricks/cover', $newFilename);
 
-                    $user->setPicture($newFilename);
+                    $trick->setCover($newFilename);
                 } catch (FileException $e) {
                     $e = "L'image n'a pas pu être uploader";
                 }
             }
 
-            return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+            /** @var UploadedFile $pictures */
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            foreach ($trick->getPictures() as $picture) {
+                // this is needed to safely include the file name as part of the URL
+                $newFilename = md5(uniqid('', true)).'.'.$picture->file->guessExtension();
+
+                // Move the filewFilename to the directory where brochures are stored
+                try {
+                    $picture->file->move('uploads/tricks', $newFilename);
+
+                    $picture->setPicture($newFilename);
+                } catch (FileException $e) {
+                    $e = "L'image n'a pas pu être uploader";
+                }
+            }
+
+            $videos = $form->get('videos')->getData();
+
+            foreach($videos as $video)
+            {
+                $video->setTrick($trick);
+                $em->persist($video);
+            }
+
+            $em->persist($trick);
+            $em->flush();
+
+            $this->addFlash('otherx', 'Votre figure a bien été ajouté');
+            return $this->redirectToRoute('app_homepage');
         }
 
         return $this->render('trick/new.html.twig', [
@@ -86,11 +122,32 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_trick_show', methods: ['GET'])]
-    public function show(Trick $trick): Response
+    #[Route('/{id}', name: 'app_trick_show', methods: ['GET', 'POST'])]
+    public function show(Trick $trick, Request $request, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
     {
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $message->setTrick($trick);
+            $message->setUser($user);
+            $message->setCreationDate(new \DateTime());
+            $message->setContent($form->get('content')->getData());
+
+            $em = $entityManager;
+            $em->persist($message);
+            $em->flush();
+
+            $this->addFlash('success','Votre commentaire a bien été pris en compte');
+
+            return $this->redirectToRoute('app_trick_show', ['id' => $trick->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
+            'form' => $form,
         ]);
     }
 
@@ -112,7 +169,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_trick_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_trick_delete', methods: ['DELETE'])]
     public function delete(Request $request, Trick $trick, TrickRepository $trickRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {

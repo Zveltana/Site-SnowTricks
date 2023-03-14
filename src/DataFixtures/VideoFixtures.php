@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Picture;
 use App\Entity\Video;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -30,7 +29,6 @@ class VideoFixtures extends Fixture implements DependentFixtureInterface
         for ($nbrVideo = 1; $nbrVideo <= 10; $nbrVideo++) {
             $video = new Video();
             $video->setVideo($faker->randomElement($videoTrick));
-            $video->setAlt($faker->paragraph(1));
             $video->setTrick($this->getReference('trick_' . $faker->numberBetween(1, 2)));
 
             $manager->persist($video);

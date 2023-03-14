@@ -35,11 +35,11 @@ class PictureFixtures extends Fixture implements DependentFixtureInterface
             'trick-20.jpg',
         ];
 
-        for ($nbrPicture = 3; $nbrPicture <= 20; $nbrPicture++) {
+        for ($nbrPicture = 0; $nbrPicture <= 18; $nbrPicture++) {
             $picture = new Picture();
             $picture->setPicture($faker->randomElement($pictureUrl));
             $picture->setAlt($faker->paragraph(1));
-            $picture->setTrick($this->getReference('trick_' . $faker->numberBetween(1, 2)));
+            $picture->setTrick($this->getReference('trick_' . $faker->numberBetween(1, 16)));
 
             $manager->persist($picture);
         }
