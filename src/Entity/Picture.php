@@ -19,6 +19,9 @@ class Picture
     #[ORM\Column(length: 255)]
     private ?string $alt = null;
 
+    #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'picture')]
+    private ?Trick $trick;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,5 +49,20 @@ class Picture
         $this->alt = $alt;
 
         return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick($trick): self{
+        $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function __toString() :string {
+        return $this->picture;
     }
 }

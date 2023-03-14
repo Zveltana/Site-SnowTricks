@@ -1,0 +1,17 @@
+{% for trick in tricks %}
+    <div class="bg-white shadow-lg w-1/6 flex flex-col" id="tricks">
+        <a href="{{ path('app_trick_show', {'id': trick.id}) }}">
+            <img src="{{ "uploads/tricks/"~trick.cover }}" alt="" class="h-52 w-64 object-cover px-5 py-3 grayscale">
+        </a>
+
+        <div class="flex w-full {% if is_granted('ROLE_USER') %}justify-between {% endif %}justify-center {% if loop.index is odd %}bg-red-600 {% endif %}bg-black px-5 py-3 h-full items-center">
+            <p class="text-center text-white">{{ trick.name }}</p>
+            {% if is_granted('ROLE_USER') %}
+                <div class="flex gap-x-2">
+                    <a href="{{ path('app_trick_edit', {'id': trick.id}) }}"><img src="{{ asset('img/icon/crayon.png') }}" alt="crayon pour modifier la figure" class="w-6 object-contain"></a>
+                    <a href="{{ path('app_trick_delete', {'id': trick.id}) }}"><img src="{{ asset('img/icon/corbeille.png') }}" alt="corbeille pour supprimer la figure" class="w-6 object-contain"></a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

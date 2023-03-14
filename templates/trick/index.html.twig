@@ -9,16 +9,23 @@
                 <div class="alert alert-danger" role="alert">{{ message }}</div>
             {% endfor %}
         {% endfor %}
-
         <figure class="relative">
             <img src="{{ asset('img/image-accueil.jpg') }}" alt="" class="relative">
             <figcaption class="absolute top-2/4 left-2/4 background-title">SnowTricks</figcaption>
             <figcaption class="absolute top-2/3 left-2/4 title">SnowTricks</figcaption>
-            <a href="#tricks"><img src="{{ asset('img/fleche-vers-le-bas.png') }}" alt="" class="absolute bottom-10 right-10 w-10"></a>
+            <a href="#trickList"><img src="{{ asset('img/fleche-vers-le-bas.png') }}" alt="" class="absolute bottom-10 right-10 w-10"></a>
         </figure>
     </section>
 
-    <section id="tricks" class="flex">
+    <section id="trickList" class="width height text-center">
+        <div class="flex gap-x-10 gap-y-10 flex-wrap justify-between" id="trick-container">
+            {{ include ('trick/_list_tricks.html.twig') }}
+        </div>
 
+        <button class="button" id="loadMoreTricksBtn">
+            En voir plus
+        </button>
     </section>
+
+
 {% endblock %}
