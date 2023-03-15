@@ -23,6 +23,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager= $entityManager;
+    }
+
     #[Route('/', name: 'app_homepage')]
     public function index(TrickRepository $trickRepository): Response
     {
@@ -170,7 +177,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('trick/edit.html.twig', [
+        return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
             'form' => $form,
         ]);

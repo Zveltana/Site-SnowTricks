@@ -20,7 +20,7 @@
     {% if is_granted('ROLE_USER') %}
         <section class="width height text-center border-b-4 border-black">
             <h1 class="title">Ajouter un trick</h1>
-            <button class="button">
+            <button class="button button-submit">
                 <a href="{{ path('app_trick_new') }}">Ajouter</a>
             </button>
         </section>
@@ -31,7 +31,7 @@
             {{ include ('trick/_list_tricks.html.twig') }}
         </div>
 
-        <button class="button" id="loadMoreTricksBtn">
+        <button class="button button-submit" id="loadMoreTricksBtn">
             En voir plus
         </button>
     </section>

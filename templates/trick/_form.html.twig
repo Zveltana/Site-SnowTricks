@@ -27,7 +27,7 @@
 
     {{ form_errors(form.videos) }}
     <div class="text-center">
-        <button type="submit" class="button">{{ button_label|default('Save') }}</button>
+        <button type="submit" class="button button-submit">{{ button_label|default('Save') }}</button>
     </div>
     {{ form_row(form._token) }}
 {{ form_end(form, {'render_rest': false}) }}
