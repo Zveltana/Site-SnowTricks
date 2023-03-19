@@ -12,11 +12,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $isNew = $options['isNew'];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => '*Nom :',
@@ -35,6 +38,8 @@ class TrickType extends AbstractType
                 'attr' => [
                     'class' => 'mb-2'
                 ],
+                'constraints' => $isNew ? [new NotNull()] : [],
+                'required' => $isNew,
             ])
             ->add('pictures', CollectionType::class, [
                 'entry_type' => PictureType::class,
@@ -44,7 +49,9 @@ class TrickType extends AbstractType
                 'label' => '*Image(s) :',
                 'attr' => [
                     'class' => 'mb-2'
-                ]
+                ],
+                'constraints' => $isNew ? [new NotNull()] : [],
+                'required' => $isNew,
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
@@ -69,6 +76,7 @@ class TrickType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
+            'isNew' => true, // Set to true by_reference
         ]);
     }
 }

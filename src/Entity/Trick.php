@@ -6,6 +6,7 @@ use App\Repository\TrickRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -30,8 +31,8 @@ class Trick
     #[ORM\Column(length: 255)]
     private ?string $cover = null;
 
-    #[ORM\Column(type: "datetime_immutable")]
-    private DateTimeImmutable $creationDate;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $creationDate = null;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1)]
@@ -94,12 +95,12 @@ class Trick
         return $this;
     }
 
-    public function getCreationDate(): DateTimeImmutable
+    public function getCreationDate(): \DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(DateTimeImmutable $creationDate): self
+    public function setCreationDate(\DateTimeInterface $creationDate): self
     {
         $this->creationDate = $creationDate;
 

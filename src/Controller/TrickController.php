@@ -9,10 +9,6 @@ use App\Form\TrickType;
 use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Monolog\DateTimeImmutable;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -168,13 +164,34 @@ class TrickController extends AbstractController
     #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Trick $trick, TrickRepository $trickRepository): Response
     {
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(TrickType::class, $trick, [
+            'isNew' => false, // Set to false since the trick already exists
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($form->get('pictures')->getData() as $picture) {
+                if ($picture->file !== null) {
+                    $file = $picture->file;
+
+                    $newFilename = md5(uniqid('', true)) . '.' . $file->guessExtension();
+
+                    // Move the filewFilename to the directory where brochures are stored
+                    try {
+                        $picture->file->move('uploads/tricks', $newFilename);
+
+                        $picture->setPicture($newFilename);
+                    } catch (FileException $e) {
+                        $e = "L'image n'a pas pu être uploader";
+                    }
+                }
+            }
+
+            $trick->setCreationDate(new \DateTime());
+
             $trickRepository->save($trick, true);
 
-            return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_homepage', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('trick/edit.html.twig', [
