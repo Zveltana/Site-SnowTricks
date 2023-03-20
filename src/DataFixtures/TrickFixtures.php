@@ -80,7 +80,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             $trick->setDescription($faker->text(500));
             $trick->setCategory($this->getReference('category_' . $faker->numberBetween(1, 2)));
             $trick->setCreationDate(new \DateTimeImmutable());
-            $trick->setCover('trick-' . $faker->numberBetween(1, 11) . '.jpg');
+            $trick->setCover('trick-' . $faker->numberBetween(7, 23) . '.jpg');
 
             $manager->persist($trick);
 

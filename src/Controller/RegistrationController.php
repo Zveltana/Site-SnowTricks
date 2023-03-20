@@ -78,7 +78,7 @@ class RegistrationController extends AbstractController
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(
-                    'ameliamassot@gmail.com',
+                    'snowtricks@gmail.com',
                     $user->getEmail(),
                     'Activation de votre compte sur le site SnowTricks',
                     'registration/confirmation_email.html.twig',

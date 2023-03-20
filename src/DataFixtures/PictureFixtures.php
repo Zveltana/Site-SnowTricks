@@ -15,6 +15,8 @@ class PictureFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create('fr_FR');
 
         $pictureUrl = [
+            'trick-1.jpg',
+            'trick-2.jpg',
             'trick-3.jpg',
             'trick-4.jpg',
             'trick-5.jpg',
@@ -33,9 +35,12 @@ class PictureFixtures extends Fixture implements DependentFixtureInterface
             'trick-18.jpg',
             'trick-19.jpg',
             'trick-20.jpg',
+            'trick-21.jpg',
+            'trick-22.jpg',
+            'trick-23.jpg',
         ];
 
-        for ($nbrPicture = 0; $nbrPicture <= 18; $nbrPicture++) {
+        for ($nbrPicture = 0; $nbrPicture <= 16; $nbrPicture++) {
             $picture = new Picture();
             $picture->setPicture($faker->randomElement($pictureUrl));
             $picture->setAlt($faker->paragraph(1));

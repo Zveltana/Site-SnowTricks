@@ -12,13 +12,31 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $isNew = $options['isNew'];
+
+        $coverConstraints = [
+            new Image([
+                'mimeTypes' => [
+                    'image/png',
+                    'image/jpg',
+                    'image/jpeg',
+                    'image/svg+xml',
+                ],
+                'mimeTypesMessage' => 'Veuillez insérer une image (png, jpg, jpeg, svg)'
+            ])];
+
+        if ($isNew) {
+            $coverConstraints[] = new NotNull();
+        }
 
         $builder
             ->add('name', TextType::class, [
@@ -38,7 +56,7 @@ class TrickType extends AbstractType
                 'attr' => [
                     'class' => 'mb-2'
                 ],
-                'constraints' => $isNew ? [new NotNull()] : [],
+                'constraints' => $coverConstraints,
                 'required' => $isNew,
             ])
             ->add('pictures', CollectionType::class, [
@@ -50,8 +68,9 @@ class TrickType extends AbstractType
                 'attr' => [
                     'class' => 'mb-2'
                 ],
-                'constraints' => $isNew ? [new NotNull()] : [],
-                'required' => $isNew,
+                'constraints' => [
+                    new Valid()
+                ],
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,

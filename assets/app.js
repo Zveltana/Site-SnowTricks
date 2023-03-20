@@ -9,6 +9,9 @@
 import './styles/app.scss';
 
 import './addTrick';
+import './tricks_controller';
+import './messages_controller';
+import './scroll';
 
 // start the Stimulus application
 import './bootstrap';
