@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -20,7 +21,8 @@ class Message
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'message')]
+    #[ORM\ManyToOne(targetEntity: Trick::class, cascade: ["persist"], inversedBy: 'message')]
+    #[ORM\JoinColumn(name:"trick_id", referencedColumnName:"id")]
     private ?Trick $trick;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'message')]

@@ -3,12 +3,7 @@
 {% block title %}SnowTricks{% endblock %}
 
 {% block body %}
-    <section class="example-wrapper">
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-danger" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
+    <section id="top">
         <figure class="relative">
             <img src="{{ asset('img/image-accueil.jpg') }}" alt="" class="relative">
             <figcaption class="absolute top-2/4 left-2/4 background-title">SnowTricks</figcaption>
@@ -35,4 +30,10 @@
             En voir plus
         </button>
     </section>
+
+    <a href="#" class="back-to-top absolute bottom-44 right-10 hidden">
+        <img src="{{ asset('img/fleche-vers-le-haut.png') }}" alt="chevron to go to the top of the page" class="w-10" onmousedown="return false">
+    </a>
+
+
 {% endblock %}

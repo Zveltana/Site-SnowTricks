@@ -9,7 +9,10 @@ use App\Form\TrickType;
 use App\Repository\MessageRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -161,6 +164,28 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    #[Route('/load-more-messages/{page}/{trickId}', name: 'app_loadMoreMessage', methods: ['GET'])]
+    public function loadMoreMessage(MessageRepository $messageRepository, $page, $trickId): JsonResponse
+    {
+        $limit = 5;
+        $messages = $messageRepository->getPaginatedMessages($page, $limit, $trickId);
+
+        $response = $this->renderView('trick/_list_messages.html.twig', [
+            'messages' => $messages
+        ]);
+
+        $page = ceil($messageRepository->countByTrickId($trickId) / $limit);
+
+        return new JsonResponse([
+            'html' => $response,
+            'pages' => $page
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_trick_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Trick $trick, TrickRepository $trickRepository): Response
     {
@@ -170,6 +195,24 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $cover = $trick->coverFile;
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($cover) {
+                $originalFilename = pathinfo($cover->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $newFilename = sprintf("%s.%s", md5(basename($originalFilename)), $cover->guessExtension());
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $cover->move('uploads/tricks/cover', $newFilename);
+
+                    $trick->setCover($newFilename);
+                } catch (FileException $e) {
+                    $e = "L'image n'a pas pu être uploader";
+                }
+            }
+
             foreach ($form->get('pictures')->getData() as $picture) {
                 if ($picture->file !== null) {
                     $file = $picture->file;
@@ -200,13 +243,29 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_trick_delete', methods: ['DELETE'])]
-    public function delete(Request $request, Trick $trick, TrickRepository $trickRepository): Response
+    #[Route('/{id}/delete', name: 'app_trick_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, Trick $trick, EntityManagerInterface $entityManager, Filesystem $filesystem): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-            $trickRepository->remove($trick, true);
+        foreach ($trick->getPictures() as $picture) {
+            $filenamePicture = 'uploads/tricks/'.$picture->getPicture();
+            $filesystem->remove($filenamePicture);
+            $entityManager->remove($picture);
         }
 
-        return $this->redirectToRoute('app_trick_index', [], Response::HTTP_SEE_OTHER);
+        foreach ($trick->getVideos() as $video) {
+            $entityManager->remove($video);
+        }
+
+        $filenameCover = 'uploads/tricks/cover/'.$trick->getCover();
+        $filesystem->remove($filenameCover);
+        $entityManager->remove($trick);
+        $entityManager->flush();
+
+        $this->addflash(
+            'success',
+            "Le trick <strong>{$trick->getName()}</strong> a été supprimé avec succès !"
+        );
+
+        return $this->redirectToRoute('app_homepage');
     }
 }

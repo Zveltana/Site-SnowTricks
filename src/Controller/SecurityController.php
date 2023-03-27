@@ -50,7 +50,7 @@ class SecurityController extends AbstractController
      * @throws NonUniqueResultException
      * @throws TransportExceptionInterface
      */
-    #[Route(path: '/oubli-pass', name: 'app_forgotten_password')]
+    #[Route(path: '/forgot-password', name: 'app_forgotten_password')]
     public function forgottenPassword(
         Request $request,
         UserRepository $userRepository,
@@ -80,7 +80,7 @@ class SecurityController extends AbstractController
                 ];
 
                 $email->sendEmailConfirmation(
-                    'register@gmail.com',
+                    'snowtricks@gmail.com',
                     $user->getEmail(),
                     'Réinitialisation de votre mot de passe',
                     'registration/password_reset.html.twig',

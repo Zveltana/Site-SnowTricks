@@ -14,8 +14,14 @@
         {% endblock %}
     </head>
 
-    <body class="bg-gray-300">
+    <body class="bg-gray-300 relative">
        {{ include ('header.html.twig') }}
+
+       {% for label, messages in app.flashes %}
+           {% for message in messages %}
+               <div class="absolute text-red-600 top-5 w-1/2 left-10 bg-black p-5 z-10" role="alert">{{ message|raw }}</div>
+           {% endfor %}
+       {% endfor %}
 
         {% block body %}{% endblock %}
 

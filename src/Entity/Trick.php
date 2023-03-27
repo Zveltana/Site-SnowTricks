@@ -43,7 +43,7 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, cascade: ["persist"])]
     private Collection $videos;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'trick')]
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: ["persist"], inversedBy: 'trick')]
     private ?Category $category;
 
     public ?UploadedFile $coverFile = null;
