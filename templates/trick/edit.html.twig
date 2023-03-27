@@ -3,11 +3,30 @@
 {% block title %}Edit Trick{% endblock %}
 
 {% block body %}
-    <h1>Edit Trick</h1>
+    <section class="width pt-44 pb-5">
+        <div class="pb-32">
+            <h2 class="text-center background-title">Modifier une figure</h2>
+            <h1 class="text-center title absolute inset-x-0">Modifier une figure</h1>
+        </div>
 
-    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="border-2 border-red-600 rounded-lg">
+            <div class="width height">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="text-red-600" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
 
-    <a href="{{ path('app_homepage') }}">back to list</a>
+                <div class="space-y-5">
+                    <h3 class="font-oswald text-xl font-bold">Modifier une figure</h3>
 
-    {{ include('trick/_delete_form.html.twig') }}
+                    {{ include('trick/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+                    {{ include('trick/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ path('app_homepage') }}">back to list</a>
+    </section>
 {% endblock %}

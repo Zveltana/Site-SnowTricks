@@ -49,8 +49,16 @@ nav {
 }
 
 .button {
-    @apply mt-10 h-14 w-32 text-white bg-black md:w-36 hover:border-0 hover:bg-red-600;
+    @apply mt-10 h-14 w-32 text-white md:w-36 hover:border-0 hover:bg-red-600;
     transition: 0.5s;
+
+    &-submit {
+        @apply bg-black;
+    }
+
+    &-delete {
+        @apply bg-red-600 hover:bg-red-700;
+    }
 }
 
 label {
