@@ -1,7 +1,6 @@
 const newItem = (e) => {
     const collectionHolder = document.querySelector(e.currentTarget.dataset.collection);
     let index = collectionHolder.dataset.index;
-    const prototype = collectionHolder.dataset.prototype;
     const item = document.createElement("div");
     item.classList.add("mt-5");
     item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, index);
@@ -14,7 +13,7 @@ const newItem = (e) => {
 };
 
 const removeItem = (e) => {
-    e.currentTarget.closest('.mt-5').remove()
+    e.currentTarget.closest(".mt-5").remove()
 }
 
 document.querySelectorAll('.btn-remove').forEach(btn => btn.addEventListener("click", removeItem))
