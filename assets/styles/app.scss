@@ -36,8 +36,8 @@ nav {
   }
 
   div {
-    height: 2px;
     @apply bg-red-600;
+    height: 2px;
     width: 0;
     transition: 0.7s;
   }
@@ -72,9 +72,10 @@ label {
 }
 
 .grayscale:hover {
+  @apply py-0 px-0;
+
   -webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
   filter: grayscale(0%);
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-  @apply py-0 px-0;
 }

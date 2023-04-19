@@ -28,8 +28,8 @@ To start, you need to clone the main branch.
 
 For the project to work well on your machine you need to do :
 
--  `npm install` to use nodes modules
--  `composer install` to generate a composer.json file
+-   `npm install` to use nodes modules
+-   `composer install` to generate a composer.json file
 
 To configure the database, edit the `.env.local` file with your database connection data.
 
