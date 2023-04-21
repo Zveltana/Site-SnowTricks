@@ -1,3 +1,5 @@
+import "./scroll";
+
 import "./fslightbox";
 
 /*
@@ -6,8 +8,6 @@ import "./fslightbox";
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
-import "./scroll";
-
 import "./tricks_controller";
 
 import "./addTrick";

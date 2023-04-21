@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="{{ asset('img/logo.svg') }}">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}

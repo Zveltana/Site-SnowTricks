@@ -57,10 +57,10 @@
     <section class="width height space-y-10">
         <div class="flex gap-x-5 justify-center">
             <p class="text-red-600">Catégorie : <span class="font-semibold">{{ trick.category }}</span></p>
-            <p class="text-red-600">Publié le {{ trick.creationDate|date('d/m/Y') }} à {{ trick.creationDate|date('H:i') }} par <span class="font-semibold">{{ trick.user.name }}</span></p>
+            <p class="text-red-600">Publié le {{ trick.creationDate|date('d/m/Y') }} par <span class="font-semibold">{{ trick.user.name }}</span></p>
 
             {% if trick.creationDate != trick.updateDate %}
-                <p class="text-red-600">Mis à jour le {{ trick.updateDate|date('d/m/Y') }} à {{ trick.updateDate|date('H:i')}}</p>
+                <p class="text-red-600">Mis à jour le {{ trick.updateDate|date('d/m/Y') }}</p>
             {% endif %}
         </div>
         <h1 class="text-center title">Trick {{ trick.name }}</h1>

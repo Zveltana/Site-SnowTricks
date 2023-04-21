@@ -1,11 +1,7 @@
-window.onscroll = function () {
-    scrollFunction()
-};
-
-function scrollFunction() {
-    if (document.body.scrollTop > 1500 || document.documentElement.scrollTop > 1500) {
-        document.querySelector(".back-to-top").style.display = "block";
+$(window).scroll(function() {
+    if ($(this).scrollTop() > 800) {
+        $('#chevron').removeClass('hidden');
     } else {
-        document.querySelector(".back-to-top").style.display = "hidden";
+        $('#chevron').addClass('hidden');
     }
-}
+});
