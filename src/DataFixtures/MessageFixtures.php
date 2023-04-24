@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Message;
-use App\Entity\Picture;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
