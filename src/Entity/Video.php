@@ -15,7 +15,7 @@ class Video
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[Assert\length(min: 2)]
+    #[Assert\Length(min: 2)]
     #[ORM\Column(length: 255)]
     private ?string $video = null;
 
